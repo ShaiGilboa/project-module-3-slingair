@@ -43,3 +43,28 @@ This will start the server and make the static pages accessible via their endpoi
 ## Developer Notes
 
 There is a folder called `notes` that contains possible hints on what to do next...
+
+---
+
+## Requirements for Poject Completion
+
+In order for your project to be considered `DONE` (passing grade), you should have a working MVP of the app.
+
+### Minimum Viable Product Details
+
+1. user can select a flight from a dropdown (or any other means you decide to implement).
+2. user can select an available seat.
+3. user can enter his/her personal information.
+4. user can view the flight confirmation page.
+5. given a `userId` (or other user info --up to you), user should be able to view his reservation.
+
+_Note that mutated test data will be preserved as long as your server is running. It stays in memory. The changes will only be reset when the server is restarted._
+
+### Optional
+
+1. Connect to the remote db/server to get "live" data. See the `dev_notes` for information on the endpoints.
+2. Create an admin page that displays the seat status for a flight.
+    - you could reuse the flight selection method you implemented above.
+    - this page should display a table of all seats, and their status.
+3. The admin page also displays the name of the user in the seat.
+4. Each seat also has a link to view the reservation details. 

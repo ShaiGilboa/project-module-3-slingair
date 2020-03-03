@@ -48,16 +48,20 @@ Before totally losing it, I had the time to create most of the FE pages, but the
 
 And this is where I would recommend you start.
 
- Get the server working. It should communicate with database server, but I am told that their backend dev just up and quit. They have someone else, but the endpoints not ready yet!
+Get the server working. It should communicate with database server, but I am told that their backend dev just up and quit. They have someone else, but the endpoints not ready yet!
 
- What follows is what information that I have been given related to the backend (database).
+What follows is what information that I have been given related to the backend (database).
 
- ## Backend / Database
+## Backend / Database
 
- The url of the REST API that stores the data is located at `TBD`.
+**Before connecting to this API, see Scott to confirm that you are _ready.**
 
- List of endpoints that the BE/Database person was supposed to deliver. _As far as I know, they are not yet functional..._
+The url of the REST API that stores the data is located at `https://journeyedu.herokuapp.com/`.
 
-I have been assured that someone is on this and that you _should_ have access to the database anytime now.
-
-...
+### List of endpoints
+ 
+| `GET`   | `/hello/:code`    | returns 'Hello' in the `code` provided |
+| `GET`   | `/slingair/flights` | returns an array of flight numbers |
+| `GET`   | `/slingair/flights/:flight` | returns info on a specific flight |
+| `GET`   | `/slingair/flights/:flight/:seat` | returns info on a specific seat |
+| `POST`  | `/slingair/users` | creates a new user/reservation |
