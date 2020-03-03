@@ -63,7 +63,7 @@ _Note that mutated test data will be preserved as long as your server is running
 ### Optional
 
 1. Connect to the remote db/server to get "live" data. See the `dev_notes` for information on the endpoints.
-2. Create an admin page that displays the seat status for a flight.
+2. Create an admin page that displays the seat status for a flight. 
     - you could reuse the flight selection method you implemented above.
     - this page should display a table of all seats, and their status.
 3. The admin page also displays the name of the user in the seat.

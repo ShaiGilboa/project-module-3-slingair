@@ -12,18 +12,22 @@
                 <h1 class='header-logo'>Air Slingshot</h1>
             </div>
             <div class="content confirmation">
-                <div class="user">
+                <div class="user" id="200">
                     <p class="message">Your flight is confirmed!</p>
                     <ul class="user-info">
                         <li>Flight #:<span id="flight"></span> seat #: <span id="seat"></span></li>
                         <li>Name:<span id="name"></span></li>
                         <li>Email:<span id="email"></span></li>
+                        <li>Id:<span id="id"></span></li>
                     </ul>
+                </div>
+                <div class="user none" id='409'>
+                    <p class="message">it seems that you already made a reservation...</p>
+                    <button id="check-flight" class="button confirm">already have a reservation?</button>
                 </div>
                 <div class="tombstone"></div>
             </div>
             <button id="another" class="button confirm">Another reservation?</button>
-            <button id="personal-reservations" class="button confirm">have a look at your other reservation?</button>
         </div>
         <p class='footer-logo'>The only way to fly!</p>
         <script src="./js/confirmed.js"></script>

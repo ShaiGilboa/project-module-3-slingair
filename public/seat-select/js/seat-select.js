@@ -1,13 +1,27 @@
 const flightInput = document.getElementById('flight');
 const seatsDiv = document.getElementById('seats-section');
 const confirmButton = document.getElementById('confirm-button');
+const anotherFlightBtn = document.getElementById('check-flight')
 
 let selection = '';
+
+fetch(`/slingair/flights`)
+    .then(response=>response.json())
+    .then(response=> {
+        const flightsArr =  response.data;
+        flightsArr.forEach(flightId => {
+            const anotherFlight = document.createElement('option');
+            anotherFlight.value = `${flightId}`;
+            anotherFlight.innerText = `${flightId}`
+            flightInput.appendChild(anotherFlight)
+        })
+    })
 
 const renderSeats = (seats) => {
     document.querySelector('.form-container').style.display = 'block';
 
     const alpha = ['A', 'B', 'C', 'D', 'E', 'F'];
+    seatsDiv.innerHTML='';
     for (let r = 1; r < 11; r++) {
         const row = document.createElement('ol');
         row.classList.add('row');
@@ -99,10 +113,21 @@ const handleConfirmSeat = (event) => {
     })
     .then(data => data.json())
     .then(response=>{
-        let id = response.data.id;
-        console.log('id', id)
-        window.location.href = `http://localhost:8000/seat-select/confirmed.html?id=${id}`
+        console.log(response)
+        if (response.status === 200){
+            let id = response.data;
+            // console.log('id', response)
+            // console.log(typeof response.data)
+            window.location.href = `/seat-select/confirmed.html?id=${id}`
+        } else if (response.status === 409) {
+            window.location.href = '/seat-select/confirmed.html?id=exist'
+        }
     })
 }
 
-flightInput.addEventListener('blur', toggleFormContent);
+const checkFlightHandler = (event) => {
+    anotherFlightBtn.removeEventListener('click', checkFlightHandler)
+    window.location.href = `/seat-select/checkFlight.html`
+}
+
+anotherFlightBtn.addEventListener('click', checkFlightHandler)

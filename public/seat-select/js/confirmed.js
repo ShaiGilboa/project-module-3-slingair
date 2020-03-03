@@ -3,7 +3,8 @@ const seatNumber = document.getElementById('seat')
 const nameDom = document.getElementById('name')
 const emailDom = document.getElementById('email')
 const anotherBtn = document.getElementById('another')
-const moreReservationsBtn = document.getElementById('personal-reservations')
+const idNumber = document.getElementById('id')
+const anotherFlightBtn = document.getElementById('check-flight')
 
 function reverse(s){
     return s.split("").reverse().join("");
@@ -22,6 +23,13 @@ while (string.charAt(idStringLocation) !== '='){
 }
 
 confirmationId = reverse(confirmationId)
+console.log(confirmationId)
+
+if(confirmationId==='exist'){
+    document.getElementById('200').classList.add('none')
+    document.getElementById('409').classList.remove('none')
+}
+
 
 fetch('/confirmation-info', {
     method: 'POST',
@@ -33,11 +41,18 @@ fetch('/confirmation-info', {
 })
     .then(data=>data.json())
     .then(userInformation => {
-        userInformation = userInformation.data;
-        flightNumber.innerText = userInformation.flight;
-        seatNumber.innerText = userInformation.seat;
-        nameDom.innerText = userInformation.givenName + ' ' + userInformation.surname;
-        emailDom.innerText = userInformation.email;
+        console.log('confirmed data: ',userInformation)
+        if (userInformation.status === 200) {
+            userInformation = userInformation.data;
+            flightNumber.innerText = userInformation.flight;
+            seatNumber.innerText = userInformation.seat;
+            nameDom.innerText = userInformation.givenName + ' ' + userInformation.surname;
+            emailDom.innerText = userInformation.email;
+            idNumber.innerText = userInformation.id
+        } else {
+            document.getElementById('200').classList.add('none')
+            document.getElementById('409').classList.remove('none')
+        }
     })
 
 
@@ -46,10 +61,10 @@ const anotherHandler = (event) => {
     window.location.href = "http://localhost:8000/seat-select"
 }
 
-const moreReservationsHandler = (event) => {
-    moreReservationsBtn.removeEventListener('click', moreReservationsHandler)
-    window.location.href = `http://localhost:8000/seat-select/confirmed-copy.html?id=${confirmationId}`
+const checkFlightHandler = (event) => {
+    anotherFlightBtn.removeEventListener('click', checkFlightHandler)
+    window.location.href = `/seat-select/checkFlight.html`
 }
 
 anotherBtn.addEventListener('click', anotherHandler)
-moreReservationsBtn.addEventListener('click', moreReservationsHandler)
+anotherFlightBtn.addEventListener('click', checkFlightHandler)

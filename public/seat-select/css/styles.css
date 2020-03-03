@@ -260,3 +260,7 @@ input {
 }
 
 .form-container { display: none; }
+
+.none {
+    display: none;
+}
