@@ -3,6 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const { seatInfoHandler, orderHandler, confirmationInfoHandler } = require('./handlers')
 
 const PORT = process.env.PORT || 8000;
 
@@ -18,6 +19,9 @@ express()
     .use(express.urlencoded({extended: false}))
     
     // endpoints
+    .post('/seating-information/:flightId', seatInfoHandler)
+    .post('/order', orderHandler)
+    .post('/confirmation-info', confirmationInfoHandler)
 
     .use((req, res) => res.send('Not Found'))
     .listen(PORT, () => console.log(`Listening on port ${PORT}`));
