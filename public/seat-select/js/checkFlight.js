@@ -9,7 +9,7 @@ const anotherHandler = (event) => {
 const handleIdNumberSubmit = (event) =>{
     event.preventDefault()
     const userId = id.value
-    console.log(userId)
+    // console.log(userId)
     fetch('/slingair/users/checkFlight', {
         method: 'POST',
         body: JSON.stringify({userId}),
@@ -21,13 +21,14 @@ const handleIdNumberSubmit = (event) =>{
         .then(response => response.json())
         .then(data => {
             if (data.status === 200) {
-                const id = data.data.id;
-                console.log('id ',id)
+                // console.log(data)
+                const id = data.data;
+                // console.log('id ',id)
                 window.location.href = `/seat-select/confirmed.html?id=${id}`
             } else if (data.status === 400){
                 four00.classList.remove('none')
                 four00.innerText += '....'
-                console.log('Erroe')
+                // console.log('Erroe')
             }
         })
 }
@@ -47,10 +48,10 @@ const handleUserInfoSubmit = (event) => {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
+            // console.log(data.data)
             if (data.status === 200) {
-                const email = data.data.email;
-                console.log('yeye')
+                const email = data.data;
+                // console.log('data')
                 window.location.href = `/seat-select/confirmed.html?id=${email}`
             } else if (data.status === 400){
                 four00.classList.remove('none')

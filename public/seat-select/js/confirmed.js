@@ -5,6 +5,7 @@ const emailDom = document.getElementById('email')
 const anotherBtn = document.getElementById('another')
 const idNumber = document.getElementById('id')
 const anotherFlightBtn = document.getElementById('check-flight')
+const makeReservationBtn = document.getElementById('make-reservation')
 
 function reverse(s){
     return s.split("").reverse().join("");
@@ -28,9 +29,7 @@ console.log(confirmationId)
 if(confirmationId==='exist'){
     document.getElementById('200').classList.add('none')
     document.getElementById('409').classList.remove('none')
-}
-
-
+} else {
 fetch('/confirmation-info', {
     method: 'POST',
     body: JSON.stringify({confirmationId}),
@@ -49,11 +48,12 @@ fetch('/confirmation-info', {
             nameDom.innerText = userInformation.givenName + ' ' + userInformation.surname;
             emailDom.innerText = userInformation.email;
             idNumber.innerText = userInformation.id
-        } else {
+        } else if (userInformation.status === 400){
             document.getElementById('200').classList.add('none')
-            document.getElementById('409').classList.remove('none')
+            document.getElementById('400').classList.remove('none')
         }
     })
+}
 
 
 const anotherHandler = (event) => {
@@ -66,5 +66,11 @@ const checkFlightHandler = (event) => {
     window.location.href = `/seat-select/checkFlight.html`
 }
 
+const makeReservationHandler = (event) => {
+    makeReservationBtn.removeEventListener('click',makeReservationHandler)
+    window.location.href = `/seat-select`
+}
+
 anotherBtn.addEventListener('click', anotherHandler)
 anotherFlightBtn.addEventListener('click', checkFlightHandler)
+makeReservationBtn.addEventListener('click', makeReservationHandler)

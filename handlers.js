@@ -66,12 +66,13 @@ const pullUserInfo = async (userId) => {
         const info = await reqRes(`https://journeyedu.herokuapp.com/slingair/users/${userId}`)
         // console.log('))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))')
         // console.log(info)
-        const userInfo = await JSON.parse(info);
+        let userInfo = await JSON.parse(info);
         // console.log('??????????????????????/')
-        // console.log(userInfo.data)
+        userInfo.data = checkUserName(userInfo.data)
+        // console.log(userInfo)
         return userInfo
     } catch(err) {
-        console.log('Error: ',err)
+        console.log('Error: ggggggggggggggggggggg',JSON.parse(err.error))
         return {status:400}
         }
 }
@@ -79,6 +80,8 @@ const pullUserInfo = async (userId) => {
 const confirmationInfoHandler = async (req, res) => {
     const {confirmationId} = req.body;
     const userInfo = await pullUserInfo(confirmationId)
+    console.log(')))))))))))))))))))))))))))))))))))))))))')
+    console.log(userInfo)
     res.status(200).send(userInfo)
 }
 
@@ -94,28 +97,75 @@ const checkFlightHandler = async (req, res) => {
     const {userId, email} = req.body;
     try {
         if(userId) {
-            console.log('55555555555555555555555555555555555555555555555555555555555');
             const info = await (pullUserInfo(userId))
-            console.log(info)
+            // console.log(info)
             if(info.status===200){
-            res.status(200).send(info);
+                res.status(200).send({status: 200, data: info.data.id});
             } else if(info.status === 400){
                 res.send({status:400})
             }
         } else if(email) {
             const info = await (pullUserInfo(email))
-            console.log('LLLLLLLLLLLLLLLLLLL');
-            console.log(info)
+                // console.log('55555555555555555555555555555555555555555555555555555555555');
+                // console.log(info.data.email)
+            // console.log('LLLLLLLLLLLLLLLLLLL');
+            // console.log(info)
             if(info.status===200){
-                res.status(200).send(info);
+                console.log(info)
+                res.status(200).send({status: 200, data: info.data.email});
             } else if(info.status === 400){
                 res.send({status:400})
             }
         }
     } catch(err) {
         console.log('Error: ',err)
-        console.log('------------------------------------------------------------');
+        // console.log('------------------------------------------------------------');
         }
 }
 
-module.exports = { seatInfoHandler, orderHandler, confirmationInfoHandler, getFlightsHandler, checkFlightHandler }
+const checkUserName = (user) => {
+    if(user.firstName)user.givenName = user.firstName
+    if(user.lastName)user.surname = user.lastName
+    return user;
+}
+
+const getAllUsers = async () => {
+    const allUsers = [];
+    let lode = [];
+    lode = await reqRes('https://journeyedu.herokuapp.com/slingair/users?limit=25&start=0')
+    lode = JSON.parse(lode)
+    // console.log('lode ',lode)
+    let Length = 0;
+    console.log(lode.length)
+    while(lode.length){
+        for(let i =0; i<lode.length;i++){
+            if(lode[i]!==null)allUsers.push(lode[i])
+        }
+        Length += lode.length
+        lode = await reqRes(`https://journeyedu.herokuapp.com/slingair/users?limit=25&start=${Length}`)
+        lode = JSON.parse(lode)
+        // console.log(lode.length)
+    }
+    console.log('fffffffffffffff ')
+    // console.log(allUsers.length)
+    allUsers.forEach(user => {
+        user = checkUserName(user);
+    });
+    return allUsers
+}
+
+const getUsersByFlightHandler = async (req, res) => {
+    const {flight} = req.params;
+    console.log(flight)
+    const allUsers = await getAllUsers();
+    const flightUsers = allUsers.filter(user => user.flight === flight)
+    console.log('gggggggggggggggggggg ',flightUsers)
+    res.status(200).send({status: 200, data: flightUsers})
+}
+
+const getusersHandler = async (req, res) => {
+    const allUsers = await getAllUsers();
+    res.status(200).send({status:200, data: allUsers})
+}
+
+module.exports = { seatInfoHandler, orderHandler, confirmationInfoHandler, getFlightsHandler, checkFlightHandler, getUsersByFlightHandler, getusersHandler }

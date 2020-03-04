@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const reqRes = require('request-promise');
 
-const { seatInfoHandler, orderHandler, confirmationInfoHandler, getFlightsHandler, checkFlightHandler } = require('./handlers')
+const { seatInfoHandler, orderHandler, confirmationInfoHandler, getFlightsHandler, checkFlightHandler, getUsersByFlightHandler, getusersHandler } = require('./handlers')
 
 const PORT = process.env.PORT || 8000;
 
@@ -26,6 +26,8 @@ express()
     .post('/confirmation-info', confirmationInfoHandler)
     .get(`/slingair/flights`, getFlightsHandler)
     .post('/slingair/users/checkFlight', checkFlightHandler)
+    .get('/slingair/getusers/:flight', getUsersByFlightHandler)
+    .get('/slingair/getusers',getusersHandler)
 
     .use((req, res) => res.send('Not Found'))
     .listen(PORT, () => console.log(`Listening on port ${PORT}`));

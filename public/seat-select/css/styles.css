@@ -264,3 +264,14 @@ input {
 .none {
     display: none;
 }
+
+table, th, td {
+    border: 1px solid black;
+}
+.information {
+    /* display: inline; */
+    display: flex ;
+    /* flex-direction: column; */
+    /* justify-content: space-between; */
+    flex-wrap: wrap;
+}
