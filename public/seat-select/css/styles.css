@@ -268,10 +268,13 @@ input {
 table, th, td {
     border: 1px solid black;
 }
+
+table{
+    margin:20px;
+}
+
 .information {
-    /* display: inline; */
     display: flex ;
-    /* flex-direction: column; */
-    /* justify-content: space-between; */
+    justify-content: center;
     flex-wrap: wrap;
 }

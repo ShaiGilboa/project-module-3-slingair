@@ -1,8 +1,4 @@
-const { flights } = require('./test-data/flightSeating');
-const { reservations } = require('./test-data/reservations')
 const reqRes = require('request-promise');
-
-let id = '0';
 
 const seatInfoHandler = async (req, res) => {
     try {
@@ -33,8 +29,6 @@ const makeOrder = async (reservation) => {
     }
     try {
         const resp = await reqRes(inf)
-        console.log('______________________________________________________________________________________________')
-        console.log(resp.reservation)
         if(resp.status===201){
             return resp.reservation;
         } else {
@@ -49,13 +43,9 @@ const orderHandler = async (req, res) => {
     const {givenName, surname, email, seat, flightNumber} = req.body
     try {
         const reservation = await makeOrder({givenName, surname, email, seat, flight: flightNumber})
-        // console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
-        // console.log(reservation)
         if(reservation.status === 409){
             res.status(409).send({status: 409, message: "User already has a reservation."})
         } else {
-            // console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-            // console.log(reservation)
             res.status(200).send({status: 200, data: reservation.id})
         }
     } catch(err) {console.log('Error: ', err)}
@@ -64,15 +54,11 @@ const orderHandler = async (req, res) => {
 const pullUserInfo = async (userId) => {
     try {
         const info = await reqRes(`https://journeyedu.herokuapp.com/slingair/users/${userId}`)
-        // console.log('))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))')
-        // console.log(info)
         let userInfo = await JSON.parse(info);
-        // console.log('??????????????????????/')
         userInfo.data = checkUserName(userInfo.data)
-        // console.log(userInfo)
         return userInfo
     } catch(err) {
-        console.log('Error: ggggggggggggggggggggg',JSON.parse(err.error))
+        console.log('Error: ',JSON.parse(err.error))
         return {status:400}
         }
 }
@@ -80,8 +66,6 @@ const pullUserInfo = async (userId) => {
 const confirmationInfoHandler = async (req, res) => {
     const {confirmationId} = req.body;
     const userInfo = await pullUserInfo(confirmationId)
-    console.log(')))))))))))))))))))))))))))))))))))))))))')
-    console.log(userInfo)
     res.status(200).send(userInfo)
 }
 
@@ -98,7 +82,6 @@ const checkFlightHandler = async (req, res) => {
     try {
         if(userId) {
             const info = await (pullUserInfo(userId))
-            // console.log(info)
             if(info.status===200){
                 res.status(200).send({status: 200, data: info.data.id});
             } else if(info.status === 400){
@@ -106,12 +89,7 @@ const checkFlightHandler = async (req, res) => {
             }
         } else if(email) {
             const info = await (pullUserInfo(email))
-                // console.log('55555555555555555555555555555555555555555555555555555555555');
-                // console.log(info.data.email)
-            // console.log('LLLLLLLLLLLLLLLLLLL');
-            // console.log(info)
             if(info.status===200){
-                console.log(info)
                 res.status(200).send({status: 200, data: info.data.email});
             } else if(info.status === 400){
                 res.send({status:400})
@@ -119,7 +97,6 @@ const checkFlightHandler = async (req, res) => {
         }
     } catch(err) {
         console.log('Error: ',err)
-        // console.log('------------------------------------------------------------');
         }
 }
 
@@ -134,9 +111,7 @@ const getAllUsers = async () => {
     let lode = [];
     lode = await reqRes('https://journeyedu.herokuapp.com/slingair/users?limit=25&start=0')
     lode = JSON.parse(lode)
-    // console.log('lode ',lode)
     let Length = 0;
-    console.log(lode.length)
     while(lode.length){
         for(let i =0; i<lode.length;i++){
             if(lode[i]!==null)allUsers.push(lode[i])
@@ -144,10 +119,7 @@ const getAllUsers = async () => {
         Length += lode.length
         lode = await reqRes(`https://journeyedu.herokuapp.com/slingair/users?limit=25&start=${Length}`)
         lode = JSON.parse(lode)
-        // console.log(lode.length)
     }
-    console.log('fffffffffffffff ')
-    // console.log(allUsers.length)
     allUsers.forEach(user => {
         user = checkUserName(user);
     });
@@ -156,10 +128,8 @@ const getAllUsers = async () => {
 
 const getUsersByFlightHandler = async (req, res) => {
     const {flight} = req.params;
-    console.log(flight)
     const allUsers = await getAllUsers();
     const flightUsers = allUsers.filter(user => user.flight === flight)
-    console.log('gggggggggggggggggggg ',flightUsers)
     res.status(200).send({status: 200, data: flightUsers})
 }
 

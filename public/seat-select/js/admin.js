@@ -103,7 +103,7 @@ const renderUsers = (users) => {
     users.forEach(user=>{
         const row = document.createElement('tr');
         const{givenName,surname,email,flight,seat,id} = user
-        const html = `<tr><td>${givenName}</td><td>${surname}</td><td>${email}</td><td>${flight}</td><td>${seat}</td>`
+        const html = `<tr><td>${givenName}</td><td>${surname}</td><td>${email}</td><td>${flight}</td><td><a href="/seat-select/confirmed.html?id=${id}">${seat}</td>`
         row.innerHTML += html;
         table.appendChild(row)
     })
