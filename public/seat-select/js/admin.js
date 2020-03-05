@@ -27,10 +27,13 @@ fetch(`/slingair/flights`)
         checkBoxes.innerHTML += '<button type="submit" value="Submit" class="button confirm">submit</button>'
     })
 
+
 const renderSeats = (seats, flight) => {
     information.innerHTML = '';
     let table = document.createElement('table')
-    table.innerHTML = `<p>${flight}</p><tr><th>seat</th><th>isAvailable?</th><th>user info</th>`
+    table.id = flight
+    console.log(table.id)
+    table.innerHTML = `<p>${flight}</p><tr><th id='seats' onclick="sortTable(${flight},0)">seat</th><th id='isAvailable' onclick="sortTable(${flight},1)">isAvailable?</th><th id='user-info' onclick="sortTable(${flight},2)">user info</th></tr>`
     let users = null;
     fetch(`/slingair/getusers/${flight}`)
         .then(response => response.json())
@@ -99,7 +102,8 @@ const toggleFormContent2 = (event) => {
 const renderUsers = (users) => {
     information.innerHTML = '';
     let table = document.createElement('table')
-    table.innerHTML = `<p>users</p><tr><th>given Name</th><th>surname</th><th>email</th><th>flight</th><th>seat</th>`
+    table.id = 'users'
+    table.innerHTML = `<p>users</p><tr><th onclick="sortTable(${table.id},0)">given Name</th><th onclick="sortTable(${table.id},1)">surname</th><th onclick="sortTable(${table.id},2)">email</th><th onclick="sortTable(${table.id},3)">flight</th><th onclick="sortTable(${table.id},4)">seat</th></tr>`
     users.forEach(user=>{
         const row = document.createElement('tr');
         const{givenName,surname,email,flight,seat,id} = user
@@ -116,6 +120,61 @@ const allUsersInfoHandler = (event) => {
         .then(response => {
             renderUsers(response.data)
         })
+}
+
+const sortTable = (tableId, columnNumber) => {
+let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = tableId;
+  switching = true;
+  // Set the sorting direction to ascending:
+  dir = "asc";
+  /* Make a loop that will continue until
+  no switching has been done: */
+  while (switching) {
+    // Start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /* Loop through all table rows (except the
+    first, which contains table headers): */
+    for (i = 1; i < (rows.length - 1); i++) {
+      // Start by saying there should be no switching:
+      shouldSwitch = false;
+      /* Get the two elements you want to compare,
+      one from current row and one from the next: */
+      x = rows[i].getElementsByTagName("TD")[columnNumber];
+      y = rows[i + 1].getElementsByTagName("TD")[columnNumber];
+      /* Check if the two rows should switch place,
+      based on the direction, asc or desc: */
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /* If a switch has been marked, make the switch
+      and mark that a switch has been done: */
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      // Each time a switch is done, increase this count by 1:
+      switchcount ++;
+    } else {
+      /* If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again. */
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
 }
 
 allUsersBtn.addEventListener('click',allUsersInfoHandler)
