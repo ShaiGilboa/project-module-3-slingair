@@ -32,7 +32,6 @@ const renderSeats = (seats, flight) => {
     information.innerHTML = '';
     let table = document.createElement('table')
     table.id = flight
-    console.log(table.id)
     table.innerHTML = `<p>${flight}</p><tr><th id='seats' onclick="sortTable(${flight},0)">seat</th><th id='isAvailable' onclick="sortTable(${flight},1)">isAvailable?</th><th id='user-info' onclick="sortTable(${flight},2)">user info</th></tr>`
     let users = null;
     fetch(`/slingair/getusers/${flight}`)
